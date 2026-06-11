@@ -13,9 +13,15 @@ const StudentList = ({
       {students.length === 0 ? (
         <p>No students to display yet</p>
       ) : (
-        students.map((student) => (
-          <StudentCard key={student.id} student={student} getGrade={getGrade} />
-        ))
+        <div className="student-grid">
+          {students.map((student) => (
+            <StudentCard
+              key={student.id}
+              student={student}
+              getGrade={getGrade}
+            />
+          ))}
+        </div>
       )}
 
       {children}

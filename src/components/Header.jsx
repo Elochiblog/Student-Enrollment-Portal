@@ -4,7 +4,7 @@ const Header = ({ title, studentCount, averageScore }) => {
       <h1>{title}</h1>
 
       <p>
-        {studentCount} Students Enrolled | Class Average:
+        {studentCount} Students | Class Average:
         {averageScore.toFixed(1)}%
       </p>
     </header>

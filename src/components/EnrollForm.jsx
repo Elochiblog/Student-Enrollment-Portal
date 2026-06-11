@@ -1,18 +1,12 @@
 import { useState, useRef } from "react";
-
 import Button from "./Button";
 
 const EnrollForm = ({ tracks, onEnroll }) => {
   const [firstName, setFirstName] = useState("");
-
   const [lastName, setLastName] = useState("");
-
   const [track, setTrack] = useState(tracks[0]);
-
   const [score, setScore] = useState("");
-
   const [errors, setErrors] = useState({});
-
   const emailRef = useRef();
   const activeRef = useRef();
 
@@ -20,18 +14,24 @@ const EnrollForm = ({ tracks, onEnroll }) => {
     e.preventDefault();
 
     const email = emailRef.current.value;
-
     const isActive = activeRef.current.checked;
-
     const newErrors = {};
 
-    if (!firstName.trim()) newErrors.firstName = "Required";
+    if (!firstName.trim()) {
+      newErrors.firstName = "First name is required";
+    }
 
-    if (!lastName.trim()) newErrors.lastName = "Required";
+    if (!lastName.trim()) {
+      newErrors.lastName = "Last name is required";
+    }
 
-    if (score < 0 || score > 100) newErrors.score = "0-100 only";
+    if (score === "" || Number(score) < 0 || Number(score) > 100) {
+      newErrors.score = "Score must be between 0 and 100";
+    }
 
-    if (!email.includes("@")) newErrors.email = "Invalid email";
+    if (!email.includes("@")) {
+      newErrors.email = "Invalid email";
+    }
 
     setErrors(newErrors);
 
@@ -49,6 +49,7 @@ const EnrollForm = ({ tracks, onEnroll }) => {
     };
 
     onEnroll(student);
+    setErrors({});
 
     setFirstName("");
     setLastName("");
@@ -58,6 +59,13 @@ const EnrollForm = ({ tracks, onEnroll }) => {
     emailRef.current.value = "";
     activeRef.current.checked = false;
   };
+
+  const isFormInvalid =
+    !firstName.trim() ||
+    !lastName.trim() ||
+    score === "" ||
+    Number(score) < 0 ||
+    Number(score) > 100;
 
   return (
     <form onSubmit={handleSubmit}>
@@ -69,11 +77,15 @@ const EnrollForm = ({ tracks, onEnroll }) => {
         onChange={(e) => setFirstName(e.target.value)}
       />
 
+      {errors.firstName && <p className="error">{errors.firstName}</p>}
+
       <input
         placeholder="Last Name"
         value={lastName}
         onChange={(e) => setLastName(e.target.value)}
       />
+
+      {errors.lastName && <p className="error">{errors.lastName}</p>}
 
       <select value={track} onChange={(e) => setTrack(e.target.value)}>
         {tracks.map((track) => (
@@ -86,8 +98,10 @@ const EnrollForm = ({ tracks, onEnroll }) => {
         value={score}
         onChange={(e) => setScore(e.target.value)}
       />
+      {errors.score && <p className="error">{errors.score}</p>}
 
       <input ref={emailRef} defaultValue="" placeholder="Email" />
+      {errors.email && <p className="error">{errors.email}</p>}
 
       <label>
         <input type="checkbox" ref={activeRef} />
@@ -95,13 +109,10 @@ const EnrollForm = ({ tracks, onEnroll }) => {
       </label>
 
       <p>
-        Preview:
-        {firstName} {lastName}
-        {" - "}
-        {track}({score})
+        Preview: {firstName} {lastName} — {track} ({score})
       </p>
 
-      <Button title="Enroll" />
+      <Button title="Enroll" className="enroll-btn" disabled={isFormInvalid} />
     </form>
   );
 };
