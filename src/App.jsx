@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
+
+import { Routes, Route } from "react-router-dom";
+
 import "./App.css";
-import Header from "./components/Header";
-import EnrollForm from "./components/EnrollForm";
-import StudentList from "./components/StudentList";
-import StatusMessage from "./components/StatusMessage";
-import ClassButton from "./components/ClassButton";
+import Navbar from "./components/Navbar";
+import HomePage from "./pages/HomePage";
+import EnrollPage from "./pages/EnrollPage";
+import StudentDetailPage from "./pages/StudentDetailPage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 const TRACKS = ["Frontend", "Backend", "Mobile", "Data"];
 
@@ -33,7 +36,9 @@ const SEED_STUDENTS = [
 
 const App = () => {
   const [students, setStudents] = useState([]);
+
   const [loading, setLoading] = useState(true);
+
   const [error, setError] = useState(null);
 
   const getGrade = (score) => {
@@ -55,7 +60,6 @@ const App = () => {
   const fetchStudents = async () => {
     try {
       setLoading(true);
-      setError(null);
 
       const response = await fetch(
         "https://randomuser.me/api/?results=6&nat=us,gb"
@@ -91,42 +95,42 @@ const App = () => {
   }, []);
 
   const handleEnroll = (newStudent) => {
-    setStudents((prevStudents) => [newStudent, ...prevStudents]);
+    setStudents((prev) => [newStudent, ...prev]);
   };
 
   return (
     <div className="app-container">
-      <Header
-        title="KodeCamp 6.0 — Enrollment Portal"
-        studentCount={students.length}
-        averageScore={getAverage(students)}
-      />
+      <Navbar />
 
-      <EnrollForm tracks={TRACKS} onEnroll={handleEnroll} />
-
-      <div className="actions">
-        <ClassButton
-          title="Refresh Roster"
-          onClick={fetchStudents}
-          className="refresh-btn"
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <HomePage
+              students={students}
+              loading={loading}
+              error={error}
+              getAverage={getAverage}
+              getGrade={getGrade}
+              fetchStudents={fetchStudents}
+            />
+          }
         />
-      </div>
 
-      {loading ? (
-        <StatusMessage type="loading" />
-      ) : error ? (
-        <StatusMessage type="error" />
-      ) : (
-        <StudentList
-          title="Student Roster"
-          students={students}
-          getGrade={getGrade}
-        >
-          <p className="roster-footer">
-            End of roster — {students.length} total
-          </p>
-        </StudentList>
-      )}
+        <Route
+          path="/enroll"
+          element={<EnrollPage tracks={TRACKS} onEnroll={handleEnroll} />}
+        />
+
+        <Route
+          path="/students/:id"
+          element={
+            <StudentDetailPage students={students} getGrade={getGrade} />
+          }
+        />
+
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
     </div>
   );
 };
