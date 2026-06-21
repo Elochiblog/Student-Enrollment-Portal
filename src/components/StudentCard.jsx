@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 const StudentCard = ({ student, getGrade }) => {
   const { avatar, firstName, lastName, track, email, score, isActive } =
     student;
@@ -7,7 +8,9 @@ const StudentCard = ({ student, getGrade }) => {
       <img src={avatar} alt={`${firstName} ${lastName}`} />
 
       <h3>
-        {firstName} {lastName}
+        <Link to={`/students/${student.id}`}>
+          {firstName} {lastName}
+        </Link>
       </h3>
 
       <p>{track}</p>

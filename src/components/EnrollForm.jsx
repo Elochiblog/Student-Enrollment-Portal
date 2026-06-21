@@ -103,10 +103,11 @@ const EnrollForm = ({ tracks, onEnroll }) => {
       <input ref={emailRef} defaultValue="" placeholder="Email" />
       {errors.email && <p className="error">{errors.email}</p>}
 
-      <label>
-        <input type="checkbox" ref={activeRef} />
-        Active
-      </label>
+      <div className="checkbox-group">
+        <input type="checkbox" ref={activeRef} id="active" />
+
+        <label htmlFor="active">Active Student</label>
+      </div>
 
       <p>
         Preview: {firstName} {lastName} — {track} ({score})
