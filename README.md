@@ -473,6 +473,307 @@ This project demonstrates understanding of:
 
 ---
 
+# Updating For the Second Task:
+
+# React Router Integration
+
+The project was upgraded to support client-side routing using React Router DOM.
+
+Instead of rendering all content on a single page, the application now uses multiple routes and page components to create a better user experience.
+
+---
+
+# Routing Features Added
+
+The following routes were implemented:
+
+| Route           | Description                             |
+| --------------- | --------------------------------------- |
+| `/`             | Home page displaying the student roster |
+| `/enroll`       | Page containing the enrollment form     |
+| `/students/:id` | Dynamic student detail page             |
+| `*`             | Custom 404 Not Found page               |
+
+---
+
+# React Router DOM
+
+The project uses:
+
+```bash
+pnpm add react-router-dom
+```
+
+The application is wrapped with BrowserRouter inside `main.jsx`.
+
+Example:
+
+```jsx
+import { BrowserRouter } from "react-router-dom";
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>
+);
+```
+
+This enables client-side navigation without full page reloads.
+
+---
+
+# Navigation with NavLink
+
+A reusable Navbar component was created using `NavLink`.
+
+Navigation links:
+
+- Home
+- Enroll
+
+Example:
+
+```jsx
+<NavLink to="/" className={({ isActive }) => (isActive ? "active-link" : "")}>
+  Home
+</NavLink>
+```
+
+Benefits of NavLink:
+
+- Automatically detects active routes
+- Allows active link styling
+- Improves user navigation experience
+
+---
+
+# Client-Side Routing
+
+The application uses `<Routes>` and `<Route>` to render different pages based on the URL.
+
+Example:
+
+```jsx
+<Routes>
+  <Route path="/" element={<HomePage />} />
+  <Route path="/enroll" element={<EnrollPage />} />
+  <Route path="/students/:id" element={<StudentDetailPage />} />
+  <Route path="*" element={<NotFoundPage />} />
+</Routes>
+```
+
+Benefits:
+
+- Faster navigation
+- No full-page refresh
+- Better user experience
+- Cleaner application structure
+
+---
+
+# Dynamic Route Parameters
+
+The student detail page uses route parameters.
+
+Example route:
+
+```jsx
+/students/:id
+```
+
+The `useParams()` hook is used to access the student ID from the URL.
+
+Example:
+
+```jsx
+const { id } = useParams();
+```
+
+The student is then searched from the student array and displayed dynamically.
+
+---
+
+# Navigation with Link
+
+The application uses `Link` instead of regular anchor tags.
+
+Example:
+
+```jsx
+<Link to={`/students/${student.id}`}>View Student</Link>
+```
+
+Benefits:
+
+- Prevents page reload
+- Preserves React state
+- Enables SPA (Single Page Application) behavior
+
+---
+
+# Redirects with useNavigate
+
+The `useNavigate()` hook is used after successful student enrollment.
+
+Process:
+
+1. User submits the form
+2. Student is added to state
+3. Application redirects back to the homepage
+
+Example:
+
+```jsx
+const navigate = useNavigate();
+
+navigate("/");
+```
+
+This improves application flow and user experience.
+
+---
+
+# Student Detail Page
+
+A new StudentDetailPage component was created.
+
+Features:
+
+- Displays a single student's full information
+- Uses dynamic routing
+- Handles invalid student IDs
+- Includes navigation back to the roster
+
+Displayed Information:
+
+- Student avatar
+- Full name
+- Email
+- Track
+- Score
+- Grade
+- Active/Inactive status
+
+---
+
+# Enroll Page
+
+The enrollment form was moved into its own route:
+
+```text
+/enroll
+```
+
+Features:
+
+- Reuses the existing EnrollForm component
+- Uses lifted state from App.jsx
+- Redirects after successful enrollment
+
+This demonstrates component reuse and shared state management.
+
+---
+
+# 404 Not Found Page
+
+A custom NotFoundPage component was created for unknown routes.
+
+Example:
+
+```jsx
+<Route path="*" element={<NotFoundPage />} />
+```
+
+Features:
+
+- Friendly error message
+- Link back to the homepage
+- Prevents blank pages on invalid URLs
+
+---
+
+# State Lifting
+
+The student roster state remains inside `App.jsx`.
+
+Why?
+
+Because multiple pages need access to the same student data:
+
+- HomePage
+- StudentDetailPage
+- EnrollPage
+
+This is called "lifting state up".
+
+Benefits:
+
+- Shared application data
+- Single source of truth
+- Easier state management
+
+---
+
+# Updated Project Structure
+
+```text
+src/
+│
+├── App.jsx
+├── App.css
+├── main.jsx
+│
+├── components/
+│   ├── Navbar.jsx
+│   ├── Header.jsx
+│   ├── Button.jsx
+│   ├── ClassButton.jsx
+│   ├── StudentCard.jsx
+│   ├── StudentList.jsx
+│   ├── EnrollForm.jsx
+│   └── StatusMessage.jsx
+│
+├── pages/
+│   ├── HomePage.jsx
+│   ├── EnrollPage.jsx
+│   ├── StudentDetailPage.jsx
+│   └── NotFoundPage.jsx
+```
+
+---
+
+# Additional React Concepts Demonstrated
+
+The routing version of the project demonstrates additional React concepts:
+
+- React Router DOM
+- BrowserRouter
+- Routes and Route
+- NavLink
+- Link
+- Dynamic Route Parameters
+- useParams
+- useNavigate
+- Client-Side Routing
+- Multi-page SPA Architecture
+- Route-based Component Rendering
+- 404 Error Handling
+
+---
+
+# Application Flow with Routing
+
+1. App loads
+2. Student data is fetched from API
+3. Navbar renders on every page
+4. User navigates between routes without page reload
+5. Home page displays student roster
+6. Clicking a student opens the detail page
+7. User can navigate to the enroll page
+8. New student is added to shared state
+9. User is redirected back to the homepage
+10. Updated roster is displayed automatically
+
 # Live Demo Link
 
 https://student-enrollment-portal.vercel.app/
